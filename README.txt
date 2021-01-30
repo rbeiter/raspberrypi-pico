@@ -47,22 +47,12 @@ board from your usb cable and release bootsel.
 Start with blinker00, no pins or jumper wires are needed.  The README
 file in this example explains the basics of how the rp2040 boots.
 
-
------
-
-WORK IN PROGRESS
-
-
-
-
-cd
-mkdir pico
-cd pico
-sudo apt install automake autoconf build-essential texinfo libtool libftdi-dev libusb-1.0-0-dev
-git clone https://github.com/raspberrypi/openocd.git --branch picoprobe --depth=1
-cd openocd
-./bootstrap
-./configure --enable-picoprobe
-make -j4
-#sudo make install
-
+The Raspberry Pi folks made a very wise decision to create firmware
+that turns Pico into an SWD/UART debugger, along with openocd support.
+See the zero example README.txt for more on this topic.  Some examples
+are going to rely on the debugger.  I did try the picoprobe on a third
+party cortex-m device and it did not work.  I did not try a non-
+picoprobe SWD debugger on the Pico, based on comments made in the
+documentation I expect that to work.  At this price it is best to
+just get a picoprobe.  If the picoprobe worked on other cortex-ms
+it would be the ideal debugger.
