@@ -192,9 +192,6 @@ add
 	corresponding register.
 0x3000 will CLeaR ...
 
-As of this writing I am still looking in the documentation for where
-this RW/XOR/SET/CLR is defined.
-
 For the SIO registers they chose another scheme (and this information
 is in the databook).
 
