@@ -28,5 +28,8 @@ then
 
 minicom acm0
 
+ctrl-a then w to deal with wrapping
+ctrl-a then q to quit
+
 Can create as many minirc files as you like with the various ttyXXXY
 devices as you want.
