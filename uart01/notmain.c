@@ -31,8 +31,17 @@ unsigned int GET32 ( unsigned int );
 #define SIO_GPIO_OE_CLR             (SIO_BASE+0x28)
 #define SIO_GPIO_OE_XOR             (SIO_BASE+0x2C)
 
-
 #define PADS_BANK0_BASE             0x4001C000
+
+#define PADS_BANK0_GPIO0_RW         (PADS_BANK0_BASE+0x04+0x0000)
+#define PADS_BANK0_GPIO0_XOR        (PADS_BANK0_BASE+0x04+0x1000)
+#define PADS_BANK0_GPIO0_SET        (PADS_BANK0_BASE+0x04+0x2000)
+#define PADS_BANK0_GPIO0_CLR        (PADS_BANK0_BASE+0x04+0x3000)
+
+#define PADS_BANK0_GPIO1_RW         (PADS_BANK0_BASE+0x08+0x0000)
+#define PADS_BANK0_GPIO1_XOR        (PADS_BANK0_BASE+0x08+0x1000)
+#define PADS_BANK0_GPIO1_SET        (PADS_BANK0_BASE+0x08+0x2000)
+#define PADS_BANK0_GPIO1_CLR        (PADS_BANK0_BASE+0x08+0x3000)
 
 #define PADS_BANK0_GPIO25_RW        (PADS_BANK0_BASE+0x68+0x0000)
 #define PADS_BANK0_GPIO25_XOR       (PADS_BANK0_BASE+0x68+0x1000)
@@ -40,6 +49,16 @@ unsigned int GET32 ( unsigned int );
 #define PADS_BANK0_GPIO25_CLR       (PADS_BANK0_BASE+0x68+0x3000)
 
 #define IO_BANK0_BASE               0x40014000
+
+#define IO_BANK0_GPIO0_CTRL_RW      (IO_BANK0_BASE+0x004+0x0000)
+#define IO_BANK0_GPIO0_CTRL_XOR     (IO_BANK0_BASE+0x004+0x1000)
+#define IO_BANK0_GPIO0_CTRL_SET     (IO_BANK0_BASE+0x004+0x2000)
+#define IO_BANK0_GPIO0_CTRL_CLR     (IO_BANK0_BASE+0x004+0x3000)
+
+#define IO_BANK0_GPIO1_CTRL_RW      (IO_BANK0_BASE+0x00C+0x0000)
+#define IO_BANK0_GPIO1_CTRL_XOR     (IO_BANK0_BASE+0x00C+0x1000)
+#define IO_BANK0_GPIO1_CTRL_SET     (IO_BANK0_BASE+0x00C+0x2000)
+#define IO_BANK0_GPIO1_CTRL_CLR     (IO_BANK0_BASE+0x00C+0x3000)
 
 #define IO_BANK0_GPIO25_STATUS_RW   (IO_BANK0_BASE+0x0C8+0x0000)
 #define IO_BANK0_GPIO25_STATUS_XOR  (IO_BANK0_BASE+0x0C8+0x1000)
@@ -51,9 +70,7 @@ unsigned int GET32 ( unsigned int );
 #define IO_BANK0_GPIO25_CTRL_SET    (IO_BANK0_BASE+0x0CC+0x2000)
 #define IO_BANK0_GPIO25_CTRL_CLR    (IO_BANK0_BASE+0x0CC+0x3000)
 
-
 #define CLOCKS_BASE                 0x40008000
-
 
 #define CLK_REF_CTRL_RW             (CLOCKS_BASE+0x30+0x0000)
 #define CLK_REF_CTRL_XOR            (CLOCKS_BASE+0x30+0x1000)
@@ -65,6 +82,10 @@ unsigned int GET32 ( unsigned int );
 #define CLK_SYS_CTRL_SET            (CLOCKS_BASE+0x3C+0x2000)
 #define CLK_SYS_CTRL_CLR            (CLOCKS_BASE+0x3C+0x3000)
 
+#define CLK_PERI_CTRL_RW            (CLOCKS_BASE+0x48+0x0000)
+#define CLK_PERI_CTRL_XOR           (CLOCKS_BASE+0x48+0x1000)
+#define CLK_PERI_CTRL_SET           (CLOCKS_BASE+0x48+0x2000)
+#define CLK_PERI_CTRL_CLR           (CLOCKS_BASE+0x48+0x3000)
 
 
 #define CLK_SYS_RESUS_CTRL_RW       (CLOCKS_BASE+0x78+0x0000)
@@ -90,45 +111,76 @@ unsigned int GET32 ( unsigned int );
 #define XOSC_STARTUP_SET            (XOSC_BASE+0x0C+0x2000)
 #define XOSC_STARTUP_CLR            (XOSC_BASE+0x0C+0x3000)
 
+#define UART0_BASE                  0x40034000
+
+#define UART0_BASE_UARTDR_RW        (UART0_BASE+0x000+0x0000)
+#define UART0_BASE_UARTFR_RW        (UART0_BASE+0x018+0x0000)
+#define UART0_BASE_UARTIBRD_RW      (UART0_BASE+0x024+0x0000)
+#define UART0_BASE_UARTFBRD_RW      (UART0_BASE+0x028+0x0000)
+#define UART0_BASE_UARTLCR_H_RW     (UART0_BASE+0x02C+0x0000)
+#define UART0_BASE_UARTCR_RW        (UART0_BASE+0x030+0x0000)
+
 #define STK_CSR 0xE000E010
 #define STK_RVR 0xE000E014
 #define STK_CVR 0xE000E018
 
-static void do_delay ( unsigned int x )
+static void uart_send ( unsigned int x )
 {
-    unsigned int ra;
-
-	for(ra=0;ra<x;)
-	{
-		if((GET32(STK_CSR)&(1<<16))!=0)
-		{
-			ra++;
-		}
-	}
+    while(1)
+    {
+        if((GET32(UART0_BASE_UARTFR_RW)&(1<<5))==0) break;
+    }
+    PUT32(UART0_BASE_UARTDR_RW,x);
 }
+static void hexstrings ( unsigned int d )
+{
+    //unsigned int ra;
+    unsigned int rb;
+    unsigned int rc;
+
+    rb=32;
+    while(1)
+    {
+        rb-=4;
+        rc=(d>>rb)&0xF;
+        if(rc>9) rc+=0x37; else rc+=0x30;
+        uart_send(rc);
+        if(rb==0) break;
+    }
+    uart_send(0x20);
+}
+static void hexstring ( unsigned int d )
+{
+    hexstrings(d);
+    uart_send(0x0D);
+    uart_send(0x0A);
+}
+
 static void clock_init ( void )
 {
     PUT32(CLK_SYS_RESUS_CTRL_RW,0);
-	//PUT32(CLK_REF_CTRL_RW,0);
-	//PUT32(CLK_SYS_CTRL_RW,0);
-    PUT32(XOSC_CTRL_RW,0xAA0); 		//1 - 15MHZ
-	PUT32(XOSC_STARTUP_RW,47);		//straight from the datasheet
-	PUT32(XOSC_CTRL_SET,0xFAB000); 	//enable
-	while(1)
-	{
-		if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
-	}
-	PUT32(CLK_REF_CTRL_RW,2); //XOSC
-	PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
+    //PUT32(CLK_REF_CTRL_RW,0);
+    //PUT32(CLK_SYS_CTRL_RW,0);
+    PUT32(XOSC_CTRL_RW,0xAA0);      //1 - 15MHZ
+    PUT32(XOSC_STARTUP_RW,47);      //straight from the datasheet
+    PUT32(XOSC_CTRL_SET,0xFAB000);  //enable
+    while(1)
+    {
+        if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
+    }
+    PUT32(CLK_REF_CTRL_RW,2); //XOSC
+    PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
 }
 
 int notmain ( void )
 {
     unsigned int ra;
 
-	clock_init();
+    clock_init();
 
-    PUT32(RESETS_RESET_CLR,1<<5); //IO_BANK0
+    PUT32(CLK_PERI_CTRL_RW,(1<<11)|(4<<5));
+
+    PUT32(RESETS_RESET_CLR,(1<<5)); //IO_BANK0
     while(1)
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
@@ -138,29 +190,49 @@ int notmain ( void )
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     }
+    PUT32(RESETS_RESET_CLR,(1<<22)); //UART0
+    while(1)
+    {
+        if((GET32(RESETS_RESET_DONE_RW)&(1<<22))!=0) break;
+    }
 
-    PUT32(SIO_GPIO_OE_CLR,1<<25);
-    PUT32(SIO_GPIO_OUT_CLR,1<<25); 
-    ra=GET32(PADS_BANK0_GPIO25_RW);
+    //GPIO 0 UART0 TX function 2
+    //GPIO 1 UART0 RX function 2
+
+    //(12000000/(16/115200)) = 6.514
+    //0.514*64 = 32.666
+    PUT32(UART0_BASE_UARTIBRD_RW,6);
+    PUT32(UART0_BASE_UARTFBRD_RW,33);
+    //0 11 1 0 0 0 0
+    //0111 0000
+    PUT32(UART0_BASE_UARTLCR_H_RW,0x70);
+    PUT32(UART0_BASE_UARTCR_RW,/*(1<<9)|*/(1<<8)|(1<<0));
+
+    ra=GET32(PADS_BANK0_GPIO0_RW);      //UART_TX
     ra^=0x40; //if input disabled then enable
     ra&=0xC0; //if output disabled then enable
-    PUT32(PADS_BANK0_GPIO25_XOR,ra);
-    PUT32(IO_BANK0_GPIO25_CTRL_RW,5); //SIO
-    PUT32(SIO_GPIO_OE_SET,1<<25); 
-	
-    PUT32(STK_CSR,0x00000004);
-    PUT32(STK_RVR,12000000-1);
-    PUT32(STK_CVR,12000000-1);
-    PUT32(STK_CSR,0x00000005);
-	
-    for(ra=0;ra<100;ra++)
+    PUT32(PADS_BANK0_GPIO0_XOR,ra);
+    PUT32(IO_BANK0_GPIO0_CTRL_RW,2);    //UART
+
+    //ra=GET32(PADS_BANK0_GPIO1_RW);        //UART_RX
+    //ra^=0x40; //if input disabled then enable
+    //ra&=0xC0; //if output disabled then enable
+    //PUT32(PADS_BANK0_GPIO1_XOR,ra);
+    //PUT32(IO_BANK0_GPIO1_CTRL_RW,2);  //UART
+
+    for(ra=0;ra<100;)
     {
-        PUT32(SIO_GPIO_OUT_XOR,1<<25);
-		do_delay(10);
+        if((GET32(UART0_BASE_UARTFR_RW)&(1<<5))==0)
+		{
+			PUT32(UART0_BASE_UARTDR_RW,0x55);
+			ra++;
+		}
     }
-	
-	
-	
+	for(ra=0;;ra++)
+	{
+		hexstring(ra);
+	}
+
     return(0);
 }
 

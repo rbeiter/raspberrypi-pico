@@ -5,20 +5,20 @@ void DELAY ( unsigned int );
 
 #define RESETS_BASE                 0x4000C000
 
-#define RESETS_BASE_RESET_RW        (RESETS_BASE+0x0+0x0000)
-#define RESETS_BASE_RESET_XOR       (RESETS_BASE+0x0+0x1000)
-#define RESETS_BASE_RESET_SET       (RESETS_BASE+0x0+0x2000)
-#define RESETS_BASE_RESET_CLR       (RESETS_BASE+0x0+0x3000)
-
-#define RESETS_BASE_WDSEL_RW        (RESETS_BASE+0x4+0x0000)
-#define RESETS_BASE_WDSEL_XOR       (RESETS_BASE+0x4+0x1000)
-#define RESETS_BASE_WDSEL_SET       (RESETS_BASE+0x4+0x2000)
-#define RESETS_BASE_WDSEL_CLR       (RESETS_BASE+0x4+0x3000)
-
-#define RESETS_BASE_RESET_DONE_RW   (RESETS_BASE+0x8+0x0000)
-#define RESETS_BASE_RESET_DONE_XOR  (RESETS_BASE+0x8+0x1000)
-#define RESETS_BASE_RESET_DONE_SET  (RESETS_BASE+0x8+0x2000)
-#define RESETS_BASE_RESET_DONE_CLR  (RESETS_BASE+0x8+0x3000)
+#define RESETS_RESET_RW        		(RESETS_BASE+0x0+0x0000)
+#define RESETS_RESET_XOR            (RESETS_BASE+0x0+0x1000)
+#define RESETS_RESET_SET            (RESETS_BASE+0x0+0x2000)
+#define RESETS_RESET_CLR            (RESETS_BASE+0x0+0x3000)
+        
+#define RESETS_WDSEL_RW             (RESETS_BASE+0x4+0x0000)
+#define RESETS_WDSEL_XOR            (RESETS_BASE+0x4+0x1000)
+#define RESETS_WDSEL_SET            (RESETS_BASE+0x4+0x2000)
+#define RESETS_WDSEL_CLR            (RESETS_BASE+0x4+0x3000)
+        
+#define RESETS_RESET_DONE_RW        (RESETS_BASE+0x8+0x0000)
+#define RESETS_RESET_DONE_XOR       (RESETS_BASE+0x8+0x1000)
+#define RESETS_RESET_DONE_SET       (RESETS_BASE+0x8+0x2000)
+#define RESETS_RESET_DONE_CLR       (RESETS_BASE+0x8+0x3000)
 
 #define SIO_BASE                    0xD0000000
 
@@ -57,11 +57,16 @@ int notmain ( void )
     unsigned int ra;
 
     //release reset on IO_BANK0
-    PUT32(RESETS_BASE_RESET_CLR,1<<5); //IO_BANK0
+    PUT32(RESETS_RESET_CLR,1<<5); //IO_BANK0
     //wait for reset to be done
     while(1)
     {
-        if((GET32(RESETS_BASE_RESET_DONE_RW)&(1<<5))!=0) break;
+        if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
+    }
+    PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
+    while(1)
+    {
+        if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     }
 
 	//output disable
