@@ -17,7 +17,7 @@ clean:
 	rm -f *.uf2
 	rm -f makeuf2
 	
-makeuf2 : makeuf2.c crcpico.h
+makeuf2 : makeuf2.c
 	gcc -O2 makeuf2.c -o makeuf2
 	
 notmain.uf2 : notmain.bin makeuf2

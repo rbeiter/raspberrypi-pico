@@ -33,3 +33,9 @@ as you can see does not seem to matter.  If you uncomment clock_init
 then it makes it a 12Mhz clock and in theory it will blink faster (
 the internal clock has a very wide range so technically it could be
 almost 12MHz but is probably between 4 and 8).
+
+
+
+Added a preliminary quick and dirty assembler to generate the pio
+instructions.
+

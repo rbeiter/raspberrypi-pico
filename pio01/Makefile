@@ -16,6 +16,12 @@ clean:
 	rm -f *.list
 	rm -f *.uf2
 	rm -f makeuf2
+	rm -f square
+		
+square.h : pasm.c square.c
+	gcc -O2 pasm.c -o square
+	./square > square.h
+	#cat square.h
 
 makeuf2 : makeuf2.c
 	gcc -O2 makeuf2.c -o makeuf2
@@ -26,7 +32,7 @@ notmain.uf2 : notmain.bin makeuf2
 start.o : start.s
 	$(ARMGNU)-as $(AOPS) start.s -o start.o
 
-notmain.o : notmain.c
+notmain.o : notmain.c square.h
 	$(ARMGNU)-gcc $(COPS) -fpic -mthumb -c notmain.c -o notmain.o
 
 notmain.bin :               memmap.ld start.o notmain.o

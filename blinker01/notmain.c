@@ -140,14 +140,14 @@ int notmain ( void )
     }
 
     PUT32(SIO_GPIO_OE_CLR,1<<25);
-    PUT32(SIO_GPIO_OUT_CLR,1<<25); 
+    PUT32(SIO_GPIO_OUT_CLR,1<<25);
     ra=GET32(PADS_BANK0_GPIO25_RW);
     ra^=0x40; //if input disabled then enable
     ra&=0xC0; //if output disabled then enable
     PUT32(PADS_BANK0_GPIO25_XOR,ra);
     PUT32(IO_BANK0_GPIO25_CTRL_RW,5); //SIO
-    PUT32(SIO_GPIO_OE_SET,1<<25); 
-	
+    PUT32(SIO_GPIO_OE_SET,1<<25);
+
     PUT32(STK_CSR,0x00000004);
     PUT32(STK_RVR,12000000-1);
     PUT32(STK_CVR,12000000-1);

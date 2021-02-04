@@ -172,10 +172,12 @@ unsigned int notmain ( void )
     //0x0001, //  3: jmp    1
             ////     .wrap
 
-    PUT32(PIO0_INSTR_MEM0_RW,0xe081);
-    PUT32(PIO0_INSTR_MEM1_RW,0xfe01);
-    PUT32(PIO0_INSTR_MEM2_RW,0xfd00);
-    PUT32(PIO0_INSTR_MEM3_RW,0x0001);
+    //PUT32(PIO0_INSTR_MEM0_RW,0xe081);
+    //PUT32(PIO0_INSTR_MEM1_RW,0xfe01);
+    //PUT32(PIO0_INSTR_MEM2_RW,0xfd00);
+    //PUT32(PIO0_INSTR_MEM3_RW,0x0001);
+
+#include "square.h"
 
     PUT32(PIO0_SM0_CLKDIV_RW,0xFFFF0000);
 
