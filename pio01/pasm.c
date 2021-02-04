@@ -13,6 +13,16 @@ static char need_label[32][64];
 static unsigned short inst[32];
 
 
+//static const uint16_t squarewave_program_instructions[] = {
+            ////     .wrap_target
+    //0x80a0, //  0: pull   block                      
+    //0x6001, //  1: out    pins, 1                    
+    //0x0000, //  2: jmp    0                          
+            ////     .wrap
+//};
+
+
+
 static void label ( char *s )
 {
 	strncpy(have_label[pc],s,63);
@@ -24,6 +34,14 @@ static void jmp ( char *s )
 	//need_label[pc][63]=0;
 	if(pc>31) exit(1);
 	inst[pc]=0<<13;
+	pc++;
+}
+static void pull_block ( void )
+{
+	if(pc>31) exit(1);
+	inst[pc]=4<<13;
+	inst[pc]|=1<<7;
+	inst[pc]|=1<<5;
 	pc++;
 }
 static void set_pindirs ( unsigned int p )
@@ -43,6 +61,15 @@ static void set_pins ( unsigned int p, unsigned int d )
 	inst[pc]|=(d&0x1F)<<8;
 	pc++;
 }	
+static void out_pins ( unsigned int p, unsigned int d )
+{
+	if(pc>31) exit(1);
+	inst[pc]=3<<13;
+	inst[pc]|=0<<5;
+	inst[pc]|=(p&0x1F)<<0;
+	inst[pc]|=(d&0x1F)<<8;
+	pc++;
+}	
 
 	            ////     .wrap_target
     //0xe081, //  0: set    pindirs, 1
@@ -51,7 +78,7 @@ static void set_pins ( unsigned int p, unsigned int d )
     //0x0001, //  3: jmp    1
             ////     .wrap
 
-#include "square.c"
+#include "pio.c"
 int main ( void )
 {
 	unsigned int ra;

@@ -63,14 +63,6 @@ GET32:
     ldr r0,[r0]
     bx lr
 
-.thumb_func
-.globl DELAY
-DELAY:
-	sub r0,#1
-	bne DELAY
-	bx lr
-	
-
 ;@-------------------------------------------------------------------------
 ;@
 ;@ Copyright (c) 2021 David Welch dwelch@dwelch.com

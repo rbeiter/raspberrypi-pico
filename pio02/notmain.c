@@ -2,6 +2,7 @@
 
 void PUT32 ( unsigned int, unsigned int );
 unsigned int GET32 ( unsigned int );
+void DELAY ( unsigned int );
 
 #define RESETS_BASE                 0x4000C000
 
@@ -113,41 +114,47 @@ unsigned int GET32 ( unsigned int );
 
 #define PIO0_BASE                   0x50200000
 
-#define PIO0_CTRL_RW                (PIO0_BASE+0x000+0x000)
-#define PIO0_INSTR_MEM0_RW          (PIO0_BASE+0x048+0x000)
-#define PIO0_INSTR_MEM1_RW          (PIO0_BASE+0x04C+0x000)
-#define PIO0_INSTR_MEM2_RW          (PIO0_BASE+0x050+0x000)
-#define PIO0_INSTR_MEM3_RW          (PIO0_BASE+0x054+0x000)
-//#define PIO0_INSTR_MEM4_RW            (PIO0_BASE+0x058+0x000)
-//#define PIO0_INSTR_MEM5_RW            (PIO0_BASE+0x05C+0x000)
-#define PIO0_SM0_CLKDIV_RW          (PIO0_BASE+0x0C8+0x000)
-#define PIO0_SM0_PINCTRL_RW         (PIO0_BASE+0x0DC+0x000)
+#define PIO0_CTRL_RW                (PIO0_BASE+0x000+0x0000)
+#define PIO0_FSTAT_RW               (PIO0_BASE+0x004+0x0000)
+#define PIO0_TXF0_RW                (PIO0_BASE+0x010+0x0000)
+
+#define PIO0_INSTR_MEM0_RW          (PIO0_BASE+0x048+0x0000)
+#define PIO0_INSTR_MEM1_RW          (PIO0_BASE+0x04C+0x0000)
+#define PIO0_INSTR_MEM2_RW          (PIO0_BASE+0x050+0x0000)
+#define PIO0_INSTR_MEM3_RW          (PIO0_BASE+0x054+0x0000)
+//#define PIO0_INSTR_MEM4_RW            (PIO0_BASE+0x058+0x0000)
+//#define PIO0_INSTR_MEM5_RW            (PIO0_BASE+0x05C+0x0000)
+#define PIO0_SM0_CLKDIV_RW          (PIO0_BASE+0x0C8+0x0000)
+//#define PIO0_SM0_EXECCTRL_RW        (PIO0_BASE+0x0CC+0x0000)
+//#define PIO0_SM0_EXECCTRL_SET       (PIO0_BASE+0x0CC+0x2000)
+#define PIO0_SM0_SHIFTCTRL_RW       (PIO0_BASE+0x0D0+0x0000)
+#define PIO0_SM0_PINCTRL_RW         (PIO0_BASE+0x0DC+0x0000)
 
 
-//static void clock_init ( void )
-//{
-    //PUT32(CLK_SYS_RESUS_CTRL_RW,0);
-    ////PUT32(CLK_REF_CTRL_RW,0);
-    ////PUT32(CLK_SYS_CTRL_RW,0);
-    //PUT32(XOSC_CTRL_RW,0xAA0);      //1 - 15MHZ
-    //PUT32(XOSC_STARTUP_RW,47);      //straight from the datasheet
-    //PUT32(XOSC_CTRL_SET,0xFAB000);  //enable
-    //while(1)
-    //{
-        //if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
-    //}
-    //PUT32(CLK_REF_CTRL_RW,2); //XOSC
-    //PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
-//}
+static void clock_init ( void )
+{
+    PUT32(CLK_SYS_RESUS_CTRL_RW,0);
+    //PUT32(CLK_REF_CTRL_RW,0);
+    //PUT32(CLK_SYS_CTRL_RW,0);
+    PUT32(XOSC_CTRL_RW,0xAA0);      //1 - 15MHZ
+    PUT32(XOSC_STARTUP_RW,47);      //straight from the datasheet
+    PUT32(XOSC_CTRL_SET,0xFAB000);  //enable
+    while(1)
+    {
+        if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
+    }
+    PUT32(CLK_REF_CTRL_RW,2); //XOSC
+    PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
+}
 
 
 unsigned int notmain ( void )
 {
     unsigned int ra;
 
-    //clock_init();
+    clock_init();
 
-    //PUT32(CLK_PERI_CTRL_RW,(1<<11)|(4<<5));
+    PUT32(CLK_PERI_CTRL_RW,(1<<11)|(4<<5));
 
     PUT32(RESETS_RESET_CLR,(1<<5)); //IO_BANK0
     while(1)
@@ -165,23 +172,9 @@ unsigned int notmain ( void )
         if((GET32(RESETS_RESET_DONE_RW)&(1<<10))!=0) break;
     }
 
-            ////     .wrap_target
-    //0xe081, //  0: set    pindirs, 1
-    //0xfe01, //  1: set    pins, 1                [30]
-    //0xfd00, //  2: set    pins, 0                [29]
-    //0x0001, //  3: jmp    1
-            ////     .wrap
+#include "pio.h"
 
-    //PUT32(PIO0_INSTR_MEM0_RW,0xe081);
-    //PUT32(PIO0_INSTR_MEM1_RW,0xfe01);
-    //PUT32(PIO0_INSTR_MEM2_RW,0xfd00);
-    //PUT32(PIO0_INSTR_MEM3_RW,0x0001);
-
-#include "square.h"
-
-    PUT32(PIO0_SM0_CLKDIV_RW,0xFFFF0000);
-
-    PUT32(PIO0_SM0_PINCTRL_RW,(1<<26)|(25<<5));
+    PUT32(PIO0_SM0_PINCTRL_RW,(1<<26)|(25<<5)|(1<<20)|(25<<0));
 
     ra=GET32(PADS_BANK0_GPIO25_RW);
     ra^=0x40; //if input disabled then enable
@@ -190,6 +183,22 @@ unsigned int notmain ( void )
     PUT32(IO_BANK0_GPIO25_CTRL_RW,6); //PIO
 
     PUT32(PIO0_CTRL_RW,1<<0);
+	
+	while(1)
+	{
+		//while(1)
+		//{
+			//if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+		//}
+		PUT32(PIO0_TXF0_RW,0xFFFFFFFF);
+		DELAY(0x100000);
+		//while(1)
+		//{
+			//if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+		//}
+		PUT32(PIO0_TXF0_RW,0);
+		DELAY(0x200000);
+	}
 
     return(0);
 }
