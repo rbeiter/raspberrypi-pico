@@ -16,12 +16,6 @@ clean:
 	rm -f *.list
 	rm -f *.uf2
 	rm -f makeuf2
-	rm -f pio
-		
-pio.h : pasm.c pio.c
-	gcc -O2 pasm.c -o pio
-	./pio > pio.h
-	#cat pio.h
 
 makeuf2 : makeuf2.c
 	gcc -O2 makeuf2.c -o makeuf2
@@ -32,7 +26,7 @@ notmain.uf2 : notmain.bin makeuf2
 start.o : start.s
 	$(ARMGNU)-as $(AOPS) start.s -o start.o
 
-notmain.o : notmain.c pio.h
+notmain.o : notmain.c
 	$(ARMGNU)-gcc $(COPS) -fpic -mthumb -c notmain.c -o notmain.o
 
 notmain.bin :               memmap.ld start.o notmain.o

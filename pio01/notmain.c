@@ -177,16 +177,17 @@ unsigned int notmain ( void )
     //PUT32(PIO0_INSTR_MEM2_RW,0xfd00);
     //PUT32(PIO0_INSTR_MEM3_RW,0x0001);
 
-#include "square.h"
+#include "pio.h"
 
     PUT32(PIO0_SM0_CLKDIV_RW,0xFFFF0000);
 
-    PUT32(PIO0_SM0_PINCTRL_RW,(1<<26)|(25<<5));
+    PUT32(PIO0_SM0_PINCTRL_RW,(1<<26)|(25<<5)); //1 pin starting at 25
 
-    ra=GET32(PADS_BANK0_GPIO25_RW);
-    ra^=0x40; //if input disabled then enable
-    ra&=0xC0; //if output disabled then enable
-    PUT32(PADS_BANK0_GPIO25_XOR,ra);
+	//the default setting has output not disabled and the pull down is fine.
+    //ra=GET32(PADS_BANK0_GPIO25_RW);
+    //ra^=0x40; //if input disabled then enable
+    //ra&=0xC0; //if output disabled then enable
+    //PUT32(PADS_BANK0_GPIO25_XOR,ra);
     PUT32(IO_BANK0_GPIO25_CTRL_RW,6); //PIO
 
     PUT32(PIO0_CTRL_RW,1<<0);
