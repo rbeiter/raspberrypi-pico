@@ -39,3 +39,41 @@ almost 12MHz but is probably between 4 and 8).
 Added a preliminary quick and dirty assembler to generate the pio
 instructions.
 
+Okay so for set pins and pindirs the reason it is 5 pins is it is
+a mask.  
+
+And these have to be consecutive to use this feature so you cannot
+have gp03 gp05 gp06, gp07 you need  then to be consecutive gp3,4,5,6
+
+void pasm ( void )
+{
+    set_pindirs(0xF);   //a mask the four pins are outputs
+label("again");
+    set_pins(1,30);  //pin 0 on
+    set_pins(0,29);  //all off
+    set_pins(2,30);  //pin 1 on
+    set_pins(0,29);  //all off
+    set_pins(4,30);  //pin 2 on
+    set_pins(0,29);  //all off
+    set_pins(8,30);  //pin 3 on
+    set_pins(0,29);  //all off
+    jmp("again");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
