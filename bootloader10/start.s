@@ -54,8 +54,6 @@ pool0:
 	bl notmain
 	b .
 
-
-
 .thumb_func
 .globl PUT32
 PUT32:

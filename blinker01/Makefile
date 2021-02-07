@@ -15,6 +15,7 @@ clean:
 	rm -f *.elf
 	rm -f *.list
 	rm -f *.uf2
+	rm -f *.srec
 	rm -f makeuf2
 	
 makeuf2 : makeuf2.c
@@ -32,6 +33,7 @@ notmain.o : notmain.c
 notmain.bin :               memmap.ld start.o notmain.o
 	$(ARMGNU)-ld $(LOPS) -T memmap.ld start.o notmain.o -o notmain.elf
 	$(ARMGNU)-objdump -D notmain.elf > notmain.list
+	$(ARMGNU)-objcopy --srec-forceS3 notmain.elf -O srec notmain.srec
 	$(ARMGNU)-objcopy -O binary notmain.elf notmain.bin
 
 ##-------------------------------------------------------------------------
