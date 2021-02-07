@@ -133,18 +133,15 @@ int notmain ( void )
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
     }
-    PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
-    while(1)
-    {
-        if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
-    }
+    //PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
+    //while(1)
+    //{
+        //if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
+    //}
 
     PUT32(SIO_GPIO_OE_CLR,1<<25);
     PUT32(SIO_GPIO_OUT_CLR,1<<25);
-    ra=GET32(PADS_BANK0_GPIO25_RW);
-    ra^=0x40; //if input disabled then enable
-    ra&=0xC0; //if output disabled then enable
-    PUT32(PADS_BANK0_GPIO25_XOR,ra);
+
     PUT32(IO_BANK0_GPIO25_CTRL_RW,5); //SIO
     PUT32(SIO_GPIO_OE_SET,1<<25);
 
