@@ -847,6 +847,8 @@ unsigned int notmain ( void )
     last_time[4]=0;
     last_time[5]=0;
 
+	timezone=5;
+
     do_nmea();
 
     return(0);

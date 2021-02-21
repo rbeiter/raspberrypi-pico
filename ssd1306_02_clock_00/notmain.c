@@ -826,6 +826,7 @@ unsigned int notmain ( void )
     ClearScreen();
     send_command(DISPLAYON);                //--turn on oled panel
 
+	timezone=5;
     do_nmea();
 
     return(0);
