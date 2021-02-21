@@ -26,7 +26,6 @@ static int do_nmea ( void )
     while(1)
     {
         ra=uart_recv();
-        uart_send(ra);
         if(ra!='*') sum^=ra;
 
         switch(state)
@@ -50,7 +49,7 @@ static int do_nmea ( void )
                 if(ra=='N') state++;
 #else
                 if(ra=='P') state++;
-#endif
+#endif				
                 else state=0;
                 break;
             }
@@ -168,17 +167,15 @@ static int do_nmea ( void )
                     num[3]=xstring[3]&0xF;
                     num[4]=xstring[4]&0xF;
                     num[5]=xstring[5]&0xF;
-
-                    new_time[0]=num[0];
-                    new_time[1]=num[1];
-                    new_time[2]=num[2];
-                    new_time[3]=num[3];
-                    new_time[4]=num[4];
-                    new_time[5]=num[5];
-
-                    new_valid = validity;
-
-                    show_time();
+					
+					new_time[0]=num[0];
+					new_time[1]=num[1];
+					new_time[2]=num[2];
+					new_time[3]=num[3];
+					new_time[4]=num[4];
+					new_time[5]=num[5];
+					
+					show_time();
                 }
                 for(rb=0;rb<6;rb++) xstring[rb]=0;
                 state=0;

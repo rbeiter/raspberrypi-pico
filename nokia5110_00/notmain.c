@@ -165,43 +165,43 @@ void DELAY ( unsigned int );
 
 static void pio_fifo_write ( unsigned int x )
 {
-	while(1)
-	{
-		if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-	}
-	PUT32(PIO0_TXF0_RW,x);
+    while(1)
+    {
+        if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+    }
+    PUT32(PIO0_TXF0_RW,x);
 }
 
 static void nokia5110_reset ( void )
 {
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
 
-	pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((0<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
 
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(0<<DC)|(0<<DIN)|(0<<CLK));
 }
 
 static void nokia5110_byte ( unsigned int dc, unsigned int x )
 {
-	unsigned int ra;
-	unsigned int data;
+    unsigned int ra;
+    unsigned int data;
 
-	pio_fifo_write((1<<RST)|(1<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
-	for(ra=0x80;ra;ra>>=1)
-	{
-		if(ra&x) data=1; else data=0;
-		pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(data<<DIN)|(0<<CLK));
-		pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(data<<DIN)|(1<<CLK));
-	}
-	pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
-	pio_fifo_write((1<<RST)|(1<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
+    for(ra=0x80;ra;ra>>=1)
+    {
+        if(ra&x) data=1; else data=0;
+        pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(data<<DIN)|(0<<CLK));
+        pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(data<<DIN)|(1<<CLK));
+    }
+    pio_fifo_write((1<<RST)|(0<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
+    pio_fifo_write((1<<RST)|(1<<CE)|(dc<<DC)|(0<<DIN)|(0<<CLK));
 }
 
 
@@ -260,7 +260,7 @@ unsigned int notmain ( void )
 
     PUT32(PIO0_CTRL_RW,1<<0);
 
-	nokia5110_reset();
+    nokia5110_reset();
 
     nokia5110_byte(NCMD,0x21); //extended commands
 //    nokia5110_byte(NCMD,0xB0); //vop less contrast
@@ -270,7 +270,7 @@ unsigned int notmain ( void )
     nokia5110_byte(NCMD,0x20); //extended off
     nokia5110_byte(NCMD,0x0C); //display on
 
-	//experiment 1
+    //experiment 1
     nokia5110_byte(NCMD,0x80); //column
     nokia5110_byte(NCMD,0x40); //row
     //for(ra=0;ra<504;ra++) nokia5110_data(ra);

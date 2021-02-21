@@ -98,35 +98,35 @@ static void do_delay ( unsigned int x )
 {
     unsigned int ra;
 
-	for(ra=0;ra<x;)
-	{
-		if((GET32(STK_CSR)&(1<<16))!=0)
-		{
-			ra++;
-		}
-	}
+    for(ra=0;ra<x;)
+    {
+        if((GET32(STK_CSR)&(1<<16))!=0)
+        {
+            ra++;
+        }
+    }
 }
 static void clock_init ( void )
 {
     PUT32(CLK_SYS_RESUS_CTRL_RW,0);
-	//PUT32(CLK_REF_CTRL_RW,0);
-	//PUT32(CLK_SYS_CTRL_RW,0);
-    PUT32(XOSC_CTRL_RW,0xAA0); 		//1 - 15MHZ
-	PUT32(XOSC_STARTUP_RW,47);		//straight from the datasheet
-	PUT32(XOSC_CTRL_SET,0xFAB000); 	//enable
-	while(1)
-	{
-		if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
-	}
-	PUT32(CLK_REF_CTRL_RW,2); //XOSC
-	PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
+    //PUT32(CLK_REF_CTRL_RW,0);
+    //PUT32(CLK_SYS_CTRL_RW,0);
+    PUT32(XOSC_CTRL_RW,0xAA0);      //1 - 15MHZ
+    PUT32(XOSC_STARTUP_RW,47);      //straight from the datasheet
+    PUT32(XOSC_CTRL_SET,0xFAB000);  //enable
+    while(1)
+    {
+        if((GET32(XOSC_STATUS_RW)&0x80000000)!=0) break;
+    }
+    PUT32(CLK_REF_CTRL_RW,2); //XOSC
+    PUT32(CLK_SYS_CTRL_RW,0); //reset/clk_ref
 }
 
 int notmain ( void )
 {
     unsigned int ra;
 
-	clock_init();
+    clock_init();
 
     PUT32(RESETS_RESET_CLR,1<<5); //IO_BANK0
     while(1)
@@ -149,15 +149,15 @@ int notmain ( void )
     PUT32(STK_RVR,12000000-1);
     PUT32(STK_CVR,12000000-1);
     PUT32(STK_CSR,0x00000005);
-	
+
     for(ra=0;ra<100;ra++)
     {
         PUT32(SIO_GPIO_OUT_XOR,1<<25);
-		do_delay(10);
+        do_delay(10);
     }
-	
-	
-	
+
+
+
     return(0);
 }
 

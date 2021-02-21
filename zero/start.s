@@ -1,29 +1,29 @@
 
 .cpu cortex-m0
 .thumb
-	mov r3,pc
-	ldr r4,=0x20000000
-	str r3,[r4]
+    mov r3,pc
+    ldr r4,=0x20000000
+    str r3,[r4]
     ldr r1,=0x20002000
 outer:
     ldr r0,=0x20001000
 inner:
-	str r0,[r0]
-	add r0,#4
-	cmp r0,r1
-	bne inner
-	b outer
+    str r0,[r0]
+    add r0,#4
+    cmp r0,r1
+    bne inner
+    b outer
 
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
 
 ;@-------------------------------------------------------------------------
 ;@

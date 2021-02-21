@@ -7,60 +7,60 @@ vector_table:
 .thumb_func
 .globl centry
 centry:
-	b reset
-	.balign 4
-	.word reset ;@ has to be offset 4
-	.word loop
-	.word loop
-	.word loop
+    b reset
+    .balign 4
+    .word reset ;@ has to be offset 4
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
 .thumb_func
 reset:
-	ldr r1,=0xE000ED08 ;@ VTOR
-	ldr r0,=vector_table
-	str r0,[r1]
-	
-	ldr r1,=0xD0000000 ;@SIO_CPUID
-	ldr r0,[r1]
-	cmp r0,#0
-	beq core_zero
+    ldr r1,=0xE000ED08 ;@ VTOR
+    ldr r0,=vector_table
+    str r0,[r1]
 
-	;@ core_one
+    ldr r1,=0xD0000000 ;@SIO_CPUID
+    ldr r0,[r1]
+    cmp r0,#0
+    beq core_zero
+
+    ;@ core_one
     ldr r0,stack_one
     mov sp,r0
     bl notmain
-	b loop
+    b loop
 
-.thumb_func	
+.thumb_func
 loop:
-	b loop
+    b loop
 
 core_zero:
     ldr r0,stack_zero
     mov sp,r0
     bl zero_entry
-	b loop
+    b loop
 
 .align
 .globl stack_zero
 stack_zero: .word 0x20002000
 .globl stack_one
-stack_one:	.word 0x20003000
+stack_one:  .word 0x20003000
 .globl one_entry
 one_entry: .word centry
 
@@ -86,14 +86,14 @@ GET32:
 .globl SEV
 .thumb_func
 SEV:
-	sev 
-	bx lr
+    sev
+    bx lr
 
 .globl WFE
 .thumb_func
 WFE:
-	wfe 
-	bx lr
+    wfe
+    bx lr
 
 ;@-------------------------------------------------------------------------
 ;@

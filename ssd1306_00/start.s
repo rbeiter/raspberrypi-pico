@@ -7,42 +7,42 @@ vector_table:
 .thumb_func
 .globl centry
 centry:
-	b reset
-	.balign 4
-	.word reset ;@ has to be offset 4
-	.word loop
-	.word loop
-	.word loop
+    b reset
+    .balign 4
+    .word reset ;@ has to be offset 4
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
-	.word loop
-	.word loop
-	.word loop
-	.word loop
+    .word loop
+    .word loop
+    .word loop
+    .word loop
 
 .thumb_func
 reset:
-	ldr r1,=0xE000ED08 ;@ VTOR
-	ldr r0,=vector_table
-	str r0,[r1]
+    ldr r1,=0xE000ED08 ;@ VTOR
+    ldr r0,=vector_table
+    str r0,[r1]
 
-	ldr r0,=0x20002000
-	mov sp,r0
+    ldr r0,=0x20002000
+    mov sp,r0
     bl notmain
-	b loop
+    b loop
 
-.thumb_func	
+.thumb_func
 loop:
-	b loop
+    b loop
 
 .align
 .ltorg
@@ -66,9 +66,9 @@ GET32:
 .thumb_func
 .globl DELAY
 DELAY:
-	sub r0,#1
-	bne DELAY
-	bx lr
+    sub r0,#1
+    bne DELAY
+    bx lr
 
 ;@-------------------------------------------------------------------------
 ;@

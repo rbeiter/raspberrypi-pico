@@ -33,3 +33,7 @@ ctrl-a then q to quit
 
 Can create as many minirc files as you like with the various ttyXXXY
 devices as you want.
+
+
+GP0 UART0_TX
+GP1 UART0_RX

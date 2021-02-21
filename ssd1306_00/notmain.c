@@ -150,59 +150,59 @@ void DELAY ( unsigned int );
 
 static void pio_fifo_write ( unsigned int x )
 {
-	while(1)
-	{
-		if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-	}
-	PUT32(PIO0_TXF0_RW,x);
+    while(1)
+    {
+        if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+    }
+    PUT32(PIO0_TXF0_RW,x);
 }
 
 static void send_start ( void )
 {
-	pio_fifo_write((1<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
 }
 
 static void send_stop ( void )
 {
-	pio_fifo_write((0<<SDA)|(0<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
 }
 
 static void send_byte ( unsigned int b )
 {
-	unsigned int ra;
-	unsigned int data;
+    unsigned int ra;
+    unsigned int data;
     for(ra=0x80;ra;ra>>=1)
     {
         if(ra&b) data=1; else data=0;
-		pio_fifo_write((data<<SDA)|(0<<SCL));
-		pio_fifo_write((data<<SDA)|(1<<SCL));
-		pio_fifo_write((data<<SDA)|(0<<SCL));
+        pio_fifo_write((data<<SDA)|(0<<SCL));
+        pio_fifo_write((data<<SDA)|(1<<SCL));
+        pio_fifo_write((data<<SDA)|(0<<SCL));
     }
-	pio_fifo_write((0<<SDA)|(0<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
 }
 
 #define PADDR 0x78
 static void send_command ( unsigned int cmd )
 {
-	send_start();
-	send_byte(PADDR);
-	send_byte(0x00);
-	send_byte(cmd);
-	send_stop();
+    send_start();
+    send_byte(PADDR);
+    send_byte(0x00);
+    send_byte(cmd);
+    send_stop();
 }
 static void send_data ( unsigned int data )
 {
-	send_start();
-	send_byte(PADDR);
-	send_byte(0x40);
-	send_byte(data);
-	send_stop();
+    send_start();
+    send_byte(PADDR);
+    send_byte(0x40);
+    send_byte(data);
+    send_stop();
 }
 static void SetPageStart ( unsigned int x )
 {
@@ -250,7 +250,7 @@ static void clock_init ( void )
 unsigned int notmain ( void )
 {
     //unsigned int ra;
-	unsigned int rb;
+    unsigned int rb;
 
     clock_init();
 
@@ -261,13 +261,13 @@ unsigned int notmain ( void )
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
     }
-	
+
     //PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
     //while(1)
     //{
         //if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     //}
-	
+
     PUT32(RESETS_RESET_CLR,(1<<10)); //PIO0
     while(1)
     {
@@ -286,15 +286,15 @@ unsigned int notmain ( void )
     PUT32(PIO0_CTRL_RW,1<<0);
 
 
-	pio_fifo_write((1<<SDA)|(1<<SCL));
-	pio_fifo_write((1<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(0<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((0<<SDA)|(0<<SCL));
-	pio_fifo_write((0<<SDA)|(1<<SCL));
-	pio_fifo_write((1<<SDA)|(1<<SCL));
-	pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((0<<SDA)|(0<<SCL));
+    pio_fifo_write((0<<SDA)|(1<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
+    pio_fifo_write((1<<SDA)|(1<<SCL));
 
 
 
@@ -342,7 +342,7 @@ unsigned int notmain ( void )
     SetColumn(0);
     for(rb=0;rb<0x00;rb++) send_data(0);
     for(rb=0;rb<0x80;rb++) send_data(rb);
-	
+
     SetPageStart(1);
     SetColumn(0);
     for(rb=0;rb<0x20;rb++) send_data(0);

@@ -232,19 +232,19 @@ int notmain ( void )
     for(ra=0;ra<100;)
     {
         if((GET32(UART0_BASE_UARTFR_RW)&(1<<5))==0)
-		{
-			PUT32(UART0_BASE_UARTDR_RW,0x55);
-			ra++;
-		}
+        {
+            PUT32(UART0_BASE_UARTDR_RW,0x55);
+            ra++;
+        }
     }
-	for(ra=0;ra<100;ra++)
-	{
-		hexstring(ra);
-	}
-	while(1)
-	{
-		hexstring(uart_recv());
-	}
+    for(ra=0;ra<100;ra++)
+    {
+        hexstring(ra);
+    }
+    while(1)
+    {
+        hexstring(uart_recv());
+    }
 
     return(0);
 }

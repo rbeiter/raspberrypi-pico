@@ -11,9 +11,9 @@ crc then it boots into the usb virtual drive as if the bootsel pin
 was asserted.
 
 This leaves 252 bytes for the second stage bootloader.  I have not
-discovered why the bootrom does not simply expose the detected flash, 
-but it appears the typical use case is our code needs to finish mapping 
-the flash into the typical 0x10000000 address space and then branches 
+discovered why the bootrom does not simply expose the detected flash,
+but it appears the typical use case is our code needs to finish mapping
+the flash into the typical 0x10000000 address space and then branches
 to 0x10000100 (the bootrom lives in the first 0x100 bytes).
 
 This example and hopefully others will live within the 252 bytes and
@@ -21,7 +21,7 @@ not need to mess with the flash.  We will cover that later.
 
 The second stage bootloader needs to be position independent so that
 it can run from SRAM.  The bootrom simply branches to the code in
-SRAM, it does not support the notion of a vector table.  
+SRAM, it does not support the notion of a vector table.
 
 The UF2 file format consists of 512 byte chunks.  The typical use
 case is to have 256 bytes of payload per chunk.  8 words of header
@@ -32,11 +32,11 @@ the second stage bootloader and the second in theory (not required
 to be where the second stage enters the main application).  They
 support loading into ram as well so for example you can change
 
-	wdata[3]=0x10000000;
+    wdata[3]=0x10000000;
 
 to
 
-	wdata[3]=0x20000000;
+    wdata[3]=0x20000000;
 
 the led will blink but it will not write it to flash.  To see this in
 action use the 0x10000000 address load it into the board.  Power cycle
@@ -46,16 +46,16 @@ the card and it will run in sram and blink at the new rate.  A reset or
 power cycle will return it to the program on flash blinking at the
 old rate.
 
-The pico board has a LED attached to GPIO 25.  As with most 
+The pico board has a LED attached to GPIO 25.  As with most
 microcontrollers there is a reset and/or clocking solution to save
 power.  Before you can talk to the IO block we have to release reset.
 
 Also as with most microcontrollers the GPIO pins are multiplexed so that
 particular pins can connect one of multiple internal peripherals.  The
-typical GPIO solution for generic manipulation of the pins is the 
+typical GPIO solution for generic manipulation of the pins is the
 SIO or Software I/O peripheral.  After reset the pins are not assigned
 a function.  For most GPIO pins function 5 will connect the pin to
-SIO.  
+SIO.
 
 Not normally visible to programmers or not easly visible the external
 pins of a device have I/O pads that among other things control input
@@ -77,7 +77,7 @@ provide developers with tools and source code.  I do have issues
 with the documentation and the use of structs across compile domains
 to access the peripherals, this is a dangerous and unwise solution that
 has sadly become a FAD in the microcontroller community.  You have been
-warned.  I have already found bugs in the documentation as well as 
+warned.  I have already found bugs in the documentation as well as
 holes.
 
 If you are not familiar with my programming style used in examples it
@@ -91,23 +91,23 @@ and you are welcome to choose another path.  This code is in no way
 intended to be a library or skeleton.  It is intended to show that
 you can be successful at working at this level.  That it does not
 take 12000 bytes to blink an led on this platform.  And that you can
-easily see the connection between the code and the hardware.  
+easily see the connection between the code and the hardware.
 
-You are expected to go off and create your own style.  The greatest 
-thing about bare metal programming is freedom.  The authors of the SDK 
-and examples were free to chose a path as was I and as will you.  The 
+You are expected to go off and create your own style.  The greatest
+thing about bare metal programming is freedom.  The authors of the SDK
+and examples were free to chose a path as was I and as will you.  The
 path I choose is to use an abstraction layer for access, very easy to
 see the address being used, no magic, not hidden, straight out of the
-datasheet (where available), in this use case I can control the 
+datasheet (where available), in this use case I can control the
 exact instruction being used.
 
 Professionally you should be able work at each of these levels.  As of
 this writing I am still not able to build the blinker example using
-the documented instructions nor adding extra work.  
+the documented instructions nor adding extra work.
 
 You are expected to understand and basic C programming, there is no
 ghee whiz code here that uses cool and fun features of the language.
-Assembly language is not required, but a basic understanding is 
+Assembly language is not required, but a basic understanding is
 crucial to continue at this level professionally if that is a path
 you wish to choose.
 
@@ -128,7 +128,7 @@ unsigned int y=5; //.data assumed to be 5 when the C code starts.
 There is a reason for this and you can worry about that later, assume
 that .bss is not zero and there is no .data.  Unless I do a copy and
 jump to ram then we can make that work just like the full sized
-Raspberry Pi's.  
+Raspberry Pi's.
 
 There are a few basic steps for a C bootstrap
 
@@ -170,7 +170,7 @@ then see how hard you have to work to reduce the size.
 
 Some vendors do this and each has their own way of doing it but this
 chip has a couple of ways to provide atomic operations which for
-bit banging GPIO to blink an led are very useful.  
+bit banging GPIO to blink an led are very useful.
 
 #define RESETS_BASE_RESET_RW        (RESETS_BASE+0x0+0x0000)
 #define RESETS_BASE_RESET_XOR       (RESETS_BASE+0x0+0x1000)
@@ -186,10 +186,10 @@ These are two schemes used to basically give four types of access to
 the same control and status registers.  Some of the registers you
 add
 
-0x1000 for XOR meaning the bits written as a 1 will toggle the 
-	corresponding bit in the register
+0x1000 for XOR meaning the bits written as a 1 will toggle the
+    corresponding bit in the register
 0x2000 for SET meaning the bits written as 1 will set the bit in the
-	corresponding register.
+    corresponding register.
 0x3000 will CLeaR ...
 
 For the SIO registers they chose another scheme (and this information
@@ -198,9 +198,9 @@ is in the databook).
 Other examples will not re-visit these topics unless to expand them
 to the next level.
 
-run 
+run
 
-make 
+make
 
 (apt get install build-essential)
 
@@ -208,7 +208,7 @@ to create notmain.uf2
 
 Examine the beginning of notmain.list
 
- 
+
 
 
 

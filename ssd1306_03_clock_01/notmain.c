@@ -715,15 +715,15 @@ unsigned char new_valid;
 
 void show_time ( void )
 {
-	unsigned int ra;
-	unsigned int rb;
+    unsigned int ra;
+    unsigned int rb;
 
-	rb=0;
-	for(ra=0;ra<4;ra++) 
-	{
-		if(last_time[ra]!=new_time[ra]) rb++;
-	}
-	if(rb==0) return;
+    rb=0;
+    for(ra=0;ra<4;ra++)
+    {
+        if(last_time[ra]!=new_time[ra]) rb++;
+    }
+    if(rb==0) return;
 
     for(ra=0;ra<4;ra++) //128x32
 //    for(ra=0;ra<8;ra++) //128x64
@@ -735,25 +735,25 @@ void show_time ( void )
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[0]][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[1]][ra][rb]);
-		if(new_valid)
-		{
-			for(rb=0;rb<16;rb++) send_data(dfont[11][ra][rb]);
-		}
-		else
-		{
-			for(rb=0;rb<16;rb++) send_data(dfont[10][ra][rb]);
-		}
+        if(new_valid)
+        {
+            for(rb=0;rb<16;rb++) send_data(dfont[11][ra][rb]);
+        }
+        else
+        {
+            for(rb=0;rb<16;rb++) send_data(dfont[10][ra][rb]);
+        }
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[2]][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[3]][ra][rb]);
         for(rb=0;rb<20;rb++) send_data(0x00);
     }
 
-	last_time[0]=new_time[0];
-	last_time[1]=new_time[1];
-	last_time[2]=new_time[2];
-	last_time[3]=new_time[3];
-	
+    last_time[0]=new_time[0];
+    last_time[1]=new_time[1];
+    last_time[2]=new_time[2];
+    last_time[3]=new_time[3];
+
 }
 
 #include "nmea.c"
@@ -840,14 +840,14 @@ unsigned int notmain ( void )
     ClearScreen();
     send_command(DISPLAYON);                //--turn on oled panel
 
-	last_time[0]=0;
-	last_time[1]=0;
-	last_time[2]=0;
-	last_time[3]=0;
-	last_time[4]=0;
-	last_time[5]=0;
+    last_time[0]=0;
+    last_time[1]=0;
+    last_time[2]=0;
+    last_time[3]=0;
+    last_time[4]=0;
+    last_time[5]=0;
 
-	do_nmea();
+    do_nmea();
 
     return(0);
 }

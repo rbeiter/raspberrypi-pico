@@ -178,22 +178,22 @@ unsigned int notmain ( void )
     PUT32(IO_BANK0_GPIO25_CTRL_RW,6); //PIO
 
     PUT32(PIO0_CTRL_RW,1<<0);
-	
-	while(1)
-	{
-		//while(1)
-		//{
-			//if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-		//}
-		PUT32(PIO0_TXF0_RW,0xFFFFFFFF);
-		DELAY(0x100000);
-		//while(1)
-		//{
-			//if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-		//}
-		PUT32(PIO0_TXF0_RW,0);
-		DELAY(0x200000);
-	}
+
+    while(1)
+    {
+        //while(1)
+        //{
+            //if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+        //}
+        PUT32(PIO0_TXF0_RW,0xFFFFFFFF);
+        DELAY(0x100000);
+        //while(1)
+        //{
+            //if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+        //}
+        PUT32(PIO0_TXF0_RW,0);
+        DELAY(0x200000);
+    }
 
     return(0);
 }

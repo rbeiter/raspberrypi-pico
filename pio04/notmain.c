@@ -213,7 +213,7 @@ static void clock_init ( void )
 unsigned int notmain ( void )
 {
     //unsigned int ra;
-	unsigned int rb;
+    unsigned int rb;
 
     clock_init();
 
@@ -258,17 +258,17 @@ PUT32(PIO0_INSTR_MEM5_RW,0x0001);
 
     PUT32(PIO0_CTRL_RW,1<<0);
 
-	while(1)
-	{
-		for(rb=0;;rb++)
-		{
-			while(1)
-			{
-				if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-			}
-			PUT32(PIO0_TXF0_RW,rb);
-		}
-	}
+    while(1)
+    {
+        for(rb=0;;rb++)
+        {
+            while(1)
+            {
+                if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+            }
+            PUT32(PIO0_TXF0_RW,rb);
+        }
+    }
 
     return(0);
 }

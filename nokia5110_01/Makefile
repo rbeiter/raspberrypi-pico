@@ -33,7 +33,7 @@ start.o : start.s
 	$(ARMGNU)-as $(AOPS) start.s -o start.o
 
 notmain.o : notmain.c pio.h fontdata.h
-	$(ARMGNU)-gcc $(COPS) -fpic -mthumb -c notmain.c -o notmain.o
+	$(ARMGNU)-gcc $(COPS) -mthumb -c notmain.c -o notmain.o
 
 notmain.bin :               memmap.ld start.o notmain.o
 	$(ARMGNU)-ld $(LOPS) -T memmap.ld start.o notmain.o -o notmain.elf

@@ -173,7 +173,7 @@ static void clock_init ( void )
 unsigned int notmain ( void )
 {
     unsigned int ra;
-	unsigned int rb;
+    unsigned int rb;
 
     clock_init();
 
@@ -197,12 +197,12 @@ unsigned int notmain ( void )
 
 //static const uint16_t pio_program_instructions[] = {
             ////     .wrap_target
-    //0xe081, //  0: set    pindirs, 1                 
-    //0xe030, //  1: set    x, 16                      
-    //0x80a0, //  2: pull   block                      
-    //0x6001, //  3: out    pins, 1                    
-    //0x0043, //  4: jmp    x--, 3                     
-    //0x0001, //  5: jmp    1                          
+    //0xe081, //  0: set    pindirs, 1
+    //0xe030, //  1: set    x, 16
+    //0x80a0, //  2: pull   block
+    //0x6001, //  3: out    pins, 1
+    //0x0043, //  4: jmp    x--, 3
+    //0x0001, //  5: jmp    1
             ////     .wrap
 //};
 
@@ -222,21 +222,21 @@ PUT32(PIO0_INSTR_MEM5_RW,0x0001);
     PUT32(IO_BANK0_GPIO25_CTRL_RW,6); //PIO
 
     PUT32(PIO0_CTRL_RW,1<<0);
-	
-	while(1)
-	{
-		for(rb=0xFFFF0000;rb;rb>>=1)
-		{
-			for(ra=0;ra<100;ra++)
-			{
-				while(1)
-				{
-					if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
-				}
-				PUT32(PIO0_TXF0_RW,rb);
-			}
-		}
-	}
+
+    while(1)
+    {
+        for(rb=0xFFFF0000;rb;rb>>=1)
+        {
+            for(ra=0;ra<100;ra++)
+            {
+                while(1)
+                {
+                    if((GET32(PIO0_FSTAT_RW)&(1<<(16+0)))==0) break;
+                }
+                PUT32(PIO0_TXF0_RW,rb);
+            }
+        }
+    }
 
     return(0);
 }

@@ -124,11 +124,11 @@ unsigned int GET32 ( unsigned int );
 #define STK_RVR 0xE000E014
 #define STK_CVR 0xE000E018
 
-#define TIMER_BASE					0x40054000
-#define TIMER_TIMEHW				(TIMER_BASE+0x00+0x0000)
-#define TIMER_TIMELW				(TIMER_BASE+0x04+0x0000)
-#define TIMER_TIMEHR				(TIMER_BASE+0x08+0x0000)
-#define TIMER_TIMELR				(TIMER_BASE+0x0C+0x0000)
+#define TIMER_BASE                  0x40054000
+#define TIMER_TIMEHW                (TIMER_BASE+0x00+0x0000)
+#define TIMER_TIMELW                (TIMER_BASE+0x04+0x0000)
+#define TIMER_TIMEHR                (TIMER_BASE+0x08+0x0000)
+#define TIMER_TIMELR                (TIMER_BASE+0x0C+0x0000)
 
 static void uart_send ( unsigned int x )
 {
@@ -166,8 +166,8 @@ static void hexstring ( unsigned int d )
 
 static void uart_init ( void )
 {
-	unsigned int ra;
-	
+    unsigned int ra;
+
     PUT32(RESETS_RESET_CLR,(1<<5)); //IO_BANK0
     while(1)
     {
@@ -228,11 +228,11 @@ static void clock_init ( void )
 
 int notmain ( void )
 {
-	unsigned int hi;
-	unsigned int lo;
+    unsigned int hi;
+    unsigned int lo;
 
     clock_init();
-	uart_init();
+    uart_init();
 
     PUT32(RESETS_RESET_CLR,(1<<21)); //TIMER
     while(1)
@@ -240,13 +240,13 @@ int notmain ( void )
         if((GET32(RESETS_RESET_DONE_RW)&(1<<21))!=0) break;
     }
 
-	while(1)
-	{
-		lo=GET32(TIMER_TIMELR);
-		hi=GET32(TIMER_TIMEHR);
-		hexstrings(hi);
-		hexstring(lo);
-	}
+    while(1)
+    {
+        lo=GET32(TIMER_TIMELR);
+        hi=GET32(TIMER_TIMEHR);
+        hexstrings(hi);
+        hexstring(lo);
+    }
 
     return(0);
 }

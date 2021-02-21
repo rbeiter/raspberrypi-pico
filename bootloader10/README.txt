@@ -71,7 +71,7 @@ run the program.  This way you or at least I dont lose any characters
 from the downloaded program.
 
 The bootloader is loaded from flash to 0x20040000 to be well out of
-the way of ram based programs at 0x20000000.  
+the way of ram based programs at 0x20000000.
 
 You can for example take notmain.srec from the blinker01 directory
 download it and run it using this bootloader.

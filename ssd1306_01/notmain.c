@@ -756,13 +756,13 @@ if(1)
     {
         SetPageStart(ra);
         SetColumn(0);
-		
+
         for(rb=0;rb<16;rb++) send_data(dfont[8][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[8][ra][rb]);
 
         for(rb=0;rb<10;rb++) send_data(0x00);
-		
+
         for(rb=0;rb<16;rb++) send_data(dfont[8][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[8][ra][rb]);

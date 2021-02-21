@@ -177,9 +177,9 @@ unsigned int notmain ( void )
 
 #include "pio.h"
 
-    PUT32(PIO0_SM0_CLKDIV_RW,0xFFFF0000);	//big clock divider
+    PUT32(PIO0_SM0_CLKDIV_RW,0xFFFF0000);   //big clock divider
     PUT32(PIO0_SM0_PINCTRL_RW,(1<<26)|(25<<5)); //1 pin starting at 25
-    PUT32(PADS_BANK0_GPIO25_RW,0x10);	//just make it an output
+    PUT32(PADS_BANK0_GPIO25_RW,0x10);   //just make it an output
     PUT32(IO_BANK0_GPIO25_CTRL_RW,6); //PIO
 
     PUT32(PIO0_CTRL_RW,1<<0);

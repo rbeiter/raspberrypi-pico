@@ -28,18 +28,18 @@
 
     ldr r0,=0x10000000
     ldr r1,=0x20000000
-	ldr r2,=0x400
-	
+    ldr r2,=0x400
+
 copy_loop:
-	ldr r3,[r0]
-	str r3,[r1]
+    ldr r3,[r0]
+    str r3,[r1]
     add r0,#0x4
     add r1,#0x4
     sub r2,#1
     bne copy_loop
-	
-	ldr r0,=0x20000101
-	bx r0
+
+    ldr r0,=0x20000101
+    bx r0
 
 pool0:
 .align

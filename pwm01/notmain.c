@@ -27,7 +27,7 @@ void DELAY ( unsigned int );
 
 int notmain ( void )
 {
-	unsigned int rb;
+    unsigned int rb;
 
     PUT32(RESETS_RESET_CLR,1<<5); //IO_BANK0
     while(1)
@@ -40,20 +40,20 @@ int notmain ( void )
         if((GET32(RESETS_RESET_DONE_RW)&(1<<14))!=0) break;
     }
     PUT32(IO_BANK0_GPIO25_CTRL_RW,4); //PWM
-	PUT32(PWM_CH4_CSR_RW,1);
-	while(1)
-	{
-		for(rb=0x0000;rb<0x10000;rb++)
-		{
-			PUT32(PWM_CH4_CC_RW,rb<<16);
-			DELAY(0x10);
-		}
-		for(rb--;rb;rb--)
-		{
-			PUT32(PWM_CH4_CC_RW,rb<<16);
-			DELAY(0x10);
-		}
-	}
+    PUT32(PWM_CH4_CSR_RW,1);
+    while(1)
+    {
+        for(rb=0x0000;rb<0x10000;rb++)
+        {
+            PUT32(PWM_CH4_CC_RW,rb<<16);
+            DELAY(0x10);
+        }
+        for(rb--;rb;rb--)
+        {
+            PUT32(PWM_CH4_CC_RW,rb<<16);
+            DELAY(0x10);
+        }
+    }
 
     return(0);
 }

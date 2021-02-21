@@ -10,35 +10,35 @@ LOPS = -nostdlib -nostartfiles
 all : notmain.uf2
 
 clean:
-	rm -f *.bin
-	rm -f *.o
-	rm -f *.elf
-	rm -f *.list
-	rm -f *.uf2
-	rm -f makeuf2
-	rm -f pio
-		
+    rm -f *.bin
+    rm -f *.o
+    rm -f *.elf
+    rm -f *.list
+    rm -f *.uf2
+    rm -f makeuf2
+    rm -f pio
+
 pio.h : pasm.c pio.c
-	gcc -O2 pasm.c -o pio
-	./pio > pio.h
-	cat pio.h
+    gcc -O2 pasm.c -o pio
+    ./pio > pio.h
+    cat pio.h
 
 makeuf2 : makeuf2.c
-	gcc -O2 makeuf2.c -o makeuf2
+    gcc -O2 makeuf2.c -o makeuf2
 
 notmain.uf2 : notmain.bin makeuf2
-	./makeuf2 notmain.bin notmain.uf2
+    ./makeuf2 notmain.bin notmain.uf2
 
 start.o : start.s
-	$(ARMGNU)-as $(AOPS) start.s -o start.o
+    $(ARMGNU)-as $(AOPS) start.s -o start.o
 
 notmain.o : notmain.c pio.h
-	$(ARMGNU)-gcc $(COPS) -fpic -mthumb -c notmain.c -o notmain.o
+    $(ARMGNU)-gcc $(COPS) -mthumb -c notmain.c -o notmain.o
 
 notmain.bin :               memmap.ld start.o notmain.o
-	$(ARMGNU)-ld $(LOPS) -T memmap.ld start.o notmain.o -o notmain.elf
-	$(ARMGNU)-objdump -D notmain.elf > notmain.list
-	$(ARMGNU)-objcopy -O binary notmain.elf notmain.bin
+    $(ARMGNU)-ld $(LOPS) -T memmap.ld start.o notmain.o -o notmain.elf
+    $(ARMGNU)-objdump -D notmain.elf > notmain.list
+    $(ARMGNU)-objcopy -O binary notmain.elf notmain.bin
 
 ##-------------------------------------------------------------------------
 ##

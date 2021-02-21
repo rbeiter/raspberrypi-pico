@@ -6,10 +6,10 @@ extern unsigned int stack_one;
 
 int notmain ( void )
 {
-	while(1)
-	{
-		PUT32(stack_one,0x76543210);
-	}
+    while(1)
+    {
+        PUT32(stack_one,0x76543210);
+    }
     return(0);
 }
 

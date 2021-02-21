@@ -207,35 +207,35 @@ unsigned int delay;
 unsigned int updn;
 static void doit ( unsigned int m, unsigned int d )
 {
-	PUT32(PIO0_TXF0_RW,0);
-	PUT32(PIO0_TXF0_RW,m);
-	PUT32(PIO0_TXF0_RW,d);
-	DELAY(delay);
-	if(updn)
-	{
-		delay+=0x40;
-		if(delay>=0x10000) 
-		{
-			delay=0x10000;
-			updn=0;
-		}
-	}
-	else
-	{
-		delay-=0x40;
-		if(delay<=0x40)
-		{
-			delay=0x40;
-			updn=1;
-		}
-	}
+    PUT32(PIO0_TXF0_RW,0);
+    PUT32(PIO0_TXF0_RW,m);
+    PUT32(PIO0_TXF0_RW,d);
+    DELAY(delay);
+    if(updn)
+    {
+        delay+=0x40;
+        if(delay>=0x10000)
+        {
+            delay=0x10000;
+            updn=0;
+        }
+    }
+    else
+    {
+        delay-=0x40;
+        if(delay<=0x40)
+        {
+            delay=0x40;
+            updn=1;
+        }
+    }
 }
 
 
 unsigned int notmain ( void )
 {
     unsigned int ra;
-	unsigned int rb;
+    unsigned int rb;
 
     clock_init();
 
@@ -259,13 +259,13 @@ unsigned int notmain ( void )
 
 //static const uint16_t pio_program_instructions[] = {
             ////     .wrap_target
-    //0x80a0, //  0: pull   block                      
-    //0x6005, //  1: out    pins, 5                    
-    //0x80a0, //  2: pull   block                      
-    //0x6085, //  3: out    pindirs, 5                 
-    //0x80a0, //  4: pull   block                      
-    //0x6005, //  5: out    pins, 5                    
-    //0x0000, //  6: jmp    0                          
+    //0x80a0, //  0: pull   block
+    //0x6005, //  1: out    pins, 5
+    //0x80a0, //  2: pull   block
+    //0x6085, //  3: out    pindirs, 5
+    //0x80a0, //  4: pull   block
+    //0x6005, //  5: out    pins, 5
+    //0x0000, //  6: jmp    0
             ////     .wrap
 //};
 
@@ -300,21 +300,21 @@ PUT32(PIO0_INSTR_MEM6_RW,0x0000);
 
     PUT32(PIO0_CTRL_RW,1<<0);
 
-	delay=0x10000;
-	updn=0;
+    delay=0x10000;
+    updn=0;
 
-	while(1)
-	{
-		for(ra=0;ra<5;ra++)
-		{
-			for(rb=0;rb<5;rb++)
-			{
-				if(rb==ra) continue;
-				doit((1<<ra)|(1<<rb),1<<ra);
-				doit((1<<ra)|(1<<rb),1<<rb);
-			}
-		}
-	}
+    while(1)
+    {
+        for(ra=0;ra<5;ra++)
+        {
+            for(rb=0;rb<5;rb++)
+            {
+                if(rb==ra) continue;
+                doit((1<<ra)|(1<<rb),1<<ra);
+                doit((1<<ra)|(1<<rb),1<<rb);
+            }
+        }
+    }
 
     return(0);
 }

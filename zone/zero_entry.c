@@ -70,10 +70,10 @@ unsigned int zero_entry ( void )
         if(ra!=one_entry) continue;
         break;
     }
-	while(1)
-	{
-		PUT32(stack_zero,0x12345678);
-	}
+    while(1)
+    {
+        PUT32(stack_zero,0x12345678);
+    }
     return(0);
 }
 

@@ -5,16 +5,16 @@ void DELAY ( unsigned int );
 
 #define RESETS_BASE                 0x4000C000
 
-#define RESETS_RESET_RW        		(RESETS_BASE+0x0+0x0000)
+#define RESETS_RESET_RW             (RESETS_BASE+0x0+0x0000)
 #define RESETS_RESET_XOR            (RESETS_BASE+0x0+0x1000)
 #define RESETS_RESET_SET            (RESETS_BASE+0x0+0x2000)
 #define RESETS_RESET_CLR            (RESETS_BASE+0x0+0x3000)
-        
+
 #define RESETS_WDSEL_RW             (RESETS_BASE+0x4+0x0000)
 #define RESETS_WDSEL_XOR            (RESETS_BASE+0x4+0x1000)
 #define RESETS_WDSEL_SET            (RESETS_BASE+0x4+0x2000)
 #define RESETS_WDSEL_CLR            (RESETS_BASE+0x4+0x3000)
-        
+
 #define RESETS_RESET_DONE_RW        (RESETS_BASE+0x8+0x0000)
 #define RESETS_RESET_DONE_XOR       (RESETS_BASE+0x8+0x1000)
 #define RESETS_RESET_DONE_SET       (RESETS_BASE+0x8+0x2000)
@@ -69,30 +69,30 @@ int notmain ( void )
         if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     }
 
-	//output disable
+    //output disable
     PUT32(SIO_GPIO_OE_CLR,1<<25);
-	//turn off pin 25 
+    //turn off pin 25
     PUT32(SIO_GPIO_OUT_CLR,1<<25);
-	
+
     ra=GET32(PADS_BANK0_GPIO25_RW);
     ra^=0x40; //if input disabled then enable
     ra&=0xC0; //if output disabled then enable
     PUT32(PADS_BANK0_GPIO25_XOR,ra);
-	
-	//set the function select to SIO (software controlled I/O)
-	PUT32(IO_BANK0_GPIO25_CTRL_RW,5);
-	
-	//output enable
-	PUT32(SIO_GPIO_OE_SET,1<<25);
-	while(1)
-	{
-		//turn on the led
-		PUT32(SIO_GPIO_OUT_SET,1<<25);
-		DELAY(0x100000);
-		//turn off the led
-		PUT32(SIO_GPIO_OUT_CLR,1<<25);
-		DELAY(0x100000);
-	}
+
+    //set the function select to SIO (software controlled I/O)
+    PUT32(IO_BANK0_GPIO25_CTRL_RW,5);
+
+    //output enable
+    PUT32(SIO_GPIO_OE_SET,1<<25);
+    while(1)
+    {
+        //turn on the led
+        PUT32(SIO_GPIO_OUT_SET,1<<25);
+        DELAY(0x100000);
+        //turn off the led
+        PUT32(SIO_GPIO_OUT_CLR,1<<25);
+        DELAY(0x100000);
+    }
     return(0);
 }
 

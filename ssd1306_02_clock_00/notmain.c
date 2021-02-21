@@ -714,21 +714,21 @@ unsigned char new_valid;
 
 void show_time ( void )
 {
-	unsigned int ra;
-	unsigned int rb;
+    unsigned int ra;
+    unsigned int rb;
 
     for(ra=0;ra<4;ra++) //128x32
 //    for(ra=0;ra<8;ra++) //128x64
     {
         SetPageStart(ra);
         SetColumn(0);
-		
+
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[0]][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[1]][ra][rb]);
 
         for(rb=0;rb<10;rb++) send_data(0x00);
-		
+
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[2]][ra][rb]);
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[3]][ra][rb]);
@@ -739,7 +739,7 @@ void show_time ( void )
         for(rb=0;rb<4;rb++) send_data(0x00);
         for(rb=0;rb<16;rb++) send_data(dfont[new_time[5]][ra][rb]);
     }
-	
+
 }
 
 #include "nmea.c"
@@ -826,7 +826,7 @@ unsigned int notmain ( void )
     ClearScreen();
     send_command(DISPLAYON);                //--turn on oled panel
 
-	do_nmea();
+    do_nmea();
 
     return(0);
 }
