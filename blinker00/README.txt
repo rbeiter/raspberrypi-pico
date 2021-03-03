@@ -1,23 +1,23 @@
 
 This is the first example.
 
-In true Broadcom fasion this is not your average microcontroller, if we
+In true Broadcom fashion this is not your average microcontroller, if we
 can even call it that.  There is no flash on the chip and the bootrom
-burned into the chip is what the ARM's always boot.  The bootrom
+burned into the chip is what the ARM cores always boot.  The bootrom
 searches for a flash by copying the first 256 bytes to SRAM and uses
 a crc32 to verify the data.  It repeats MANY times until it finds
-something or fails.  If it does not find something that passes the
-crc then it boots into the usb virtual drive as if the bootsel pin
-was asserted.
+something or fails (not all external flash chips are created equal).  
+If it does not find something that passes the crc then it boots into 
+the usb virtual drive as if the bootsel pin was asserted.
 
 This leaves 252 bytes for the second stage bootloader.  I have not
 discovered why the bootrom does not simply expose the detected flash,
 but it appears the typical use case is our code needs to finish mapping
-the flash into the typical 0x10000000 address space and then branches
-to 0x10000100 (the bootrom lives in the first 0x100 bytes).
+the flash into the typical 0x10000000 address space and then you decide
+how you want to extract and use the flash, run it from there or copy 
+and jump.
 
-This example and hopefully others will live within the 252 bytes and
-not need to mess with the flash.  We will cover that later.
+This example lives within the 252 bytes.
 
 The second stage bootloader needs to be position independent so that
 it can run from SRAM.  The bootrom simply branches to the code in
@@ -28,9 +28,10 @@ case is to have 256 bytes of payload per chunk.  8 words of header
 a word at the end, and the payload in the middle.  The typical
 use case is to specify an address starting at 0x10000000 and to
 have 0x100 bytes per chunk.  So the first chunk is going to have
-the second stage bootloader and the second in theory (not required
-to be where the second stage enters the main application).  They
-support loading into ram as well so for example you can change
+the second stage bootloader and the second chunk if present at all
+is up to you, along with the rest.
+
+They support loading into ram as well so for example you can change
 
     wdata[3]=0x10000000;
 
@@ -38,33 +39,43 @@ to
 
     wdata[3]=0x20000000;
 
-the led will blink but it will not write it to flash.  To see this in
-action use the 0x10000000 address load it into the board.  Power cycle
-or reset and confirm.  Change wdata[3] and the DELAY values to be
-faster or slower, using bootsel load this SRAM based program into
-the card and it will run in sram and blink at the new rate.  A reset or
-power cycle will return it to the program on flash blinking at the
-old rate.
+If loaded into ram it will run from ram but not be written to flash
+it will be lost when power goes.  The documentation shows that you 
+can use most of the SRAM space and you do not have to start at 
+0x20000000.
+
+I do not know what happens if you mix and match flash and ram.
+
+To see this in action use the 0x10000000 address load it into the 
+board.  Power cycle or reset and confirm.  Change wdata[3] and the 
+DELAY values to be faster or slower, using bootsel load this SRAM based 
+program into the card and it will run in sram and blink at the new 
+rate.  A reset or power cycle will return it to the program on flash 
+blinking at the old rate.
 
 The pico board has a LED attached to GPIO 25.  As with most
 microcontrollers there is a reset and/or clocking solution to save
 power.  Before you can talk to the IO block we have to release reset.
 
-Also as with most microcontrollers the GPIO pins are multiplexed so that
-particular pins can connect one of multiple internal peripherals.  The
-typical GPIO solution for generic manipulation of the pins is the
-SIO or Software I/O peripheral.  After reset the pins are not assigned
-a function.  For most GPIO pins function 5 will connect the pin to
-SIO.
+Also as with most microcontrollers the GPIO pins are multiplexed so 
+that particular pins can connect one of multiple internal peripherals.  
+The typical GPIO solution for generic manipulation of the pins is the
+SIO or Software I/O peripheral (for this part).  After reset the pins 
+are not assigned a function.  For most GPIO pins function 5 will 
+connect the pin to SIO.
 
 Not normally visible to programmers or not easly visible the external
 pins of a device have I/O pads that among other things control input
 and output and voltage levels.  You will often not see these as for
 example if you connect to a UART the logic will enable the pad for
 output for a TX pin and input for the RX pin.  We apparently have
-direct control.  So the next step is to enable the I/O pads, we want
-to use this pin for push pull so we really only need to make it an
-output (I assume, didnt try) but this enables input and output.
+direct control.  The I/O pads default to output not disabled (the
+output enable is controled by the peripheral (SIO) not the pad, and
+input enabled.  There is a pull up enabled on reset but that is okay
+for this example as we are going to push/pull (drive the pin both
+high and low, are not relying on a pull up nor pull down).  It does
+not appear that we have to release reset on the PADS in order to use
+the pins (only to talk to the pads registers I assume).
 
 Lastly we talk to the SIO peripheral to enable the pin as an output
 and then set the pin high and low to blink the led.  The DELAY function
@@ -107,6 +118,7 @@ the documented instructions nor adding extra work.
 
 You are expected to understand and basic C programming, there is no
 ghee whiz code here that uses cool and fun features of the language.
+
 Assembly language is not required, but a basic understanding is
 crucial to continue at this level professionally if that is a path
 you wish to choose.
@@ -208,12 +220,20 @@ to create notmain.uf2
 
 Examine the beginning of notmain.list
 
-
-
-
-
 When you press and hold bootsel, reset or power cycle the board,
 release bootsel.  Copy notmain.uf2 to the virtual drive that appears,
 the program should be written to flash, the virtual drive disappears
-and the led starts to blink.  Change the value in passed to the DELAY
-function calls to change the blink rate.
+and the led starts to blink.  Being in flash you can now unplug and
+replug the board into power, not holding bootsel, and the program
+will again run. Change the value in passed to the DELAY function calls 
+to change the blink rate.  And repeat and see that the new program
+blinks at a different rate.
+
+The pi folks have a program named flash_nuke.uf2 that you will probably
+want to find.  Use the bootsel process to load this program it will
+erase the flash and then blink the led.  Once done you will get
+the virtual usb drive when you power on the board.  Most of the
+examples are SRAM based and you ideally just want to have the flash
+erased so you dont have to press and hold bootsel every time.  The
+sram directory contains a matching example to this one but is sram
+based and does not write to flash.
