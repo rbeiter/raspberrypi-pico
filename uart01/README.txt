@@ -1,5 +1,5 @@
 
-This example uses the uart at 115200N81.
+This example uses the uart at 115200 N81.
 
 You will need a 3.3v UART solution, or use another pico as a debugger
 and connect gpio0 on the target mcu with gpio5

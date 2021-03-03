@@ -31,23 +31,6 @@ unsigned int GET32 ( unsigned int );
 #define SIO_GPIO_OE_CLR             (SIO_BASE+0x28)
 #define SIO_GPIO_OE_XOR             (SIO_BASE+0x2C)
 
-#define PADS_BANK0_BASE             0x4001C000
-
-#define PADS_BANK0_GPIO0_RW         (PADS_BANK0_BASE+0x04+0x0000)
-#define PADS_BANK0_GPIO0_XOR        (PADS_BANK0_BASE+0x04+0x1000)
-#define PADS_BANK0_GPIO0_SET        (PADS_BANK0_BASE+0x04+0x2000)
-#define PADS_BANK0_GPIO0_CLR        (PADS_BANK0_BASE+0x04+0x3000)
-
-#define PADS_BANK0_GPIO1_RW         (PADS_BANK0_BASE+0x08+0x0000)
-#define PADS_BANK0_GPIO1_XOR        (PADS_BANK0_BASE+0x08+0x1000)
-#define PADS_BANK0_GPIO1_SET        (PADS_BANK0_BASE+0x08+0x2000)
-#define PADS_BANK0_GPIO1_CLR        (PADS_BANK0_BASE+0x08+0x3000)
-
-#define PADS_BANK0_GPIO25_RW        (PADS_BANK0_BASE+0x68+0x0000)
-#define PADS_BANK0_GPIO25_XOR       (PADS_BANK0_BASE+0x68+0x1000)
-#define PADS_BANK0_GPIO25_SET       (PADS_BANK0_BASE+0x68+0x2000)
-#define PADS_BANK0_GPIO25_CLR       (PADS_BANK0_BASE+0x68+0x3000)
-
 #define IO_BANK0_BASE               0x40014000
 
 #define IO_BANK0_GPIO0_CTRL_RW      (IO_BANK0_BASE+0x004+0x0000)
@@ -202,11 +185,6 @@ int notmain ( void )
     while(1)
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
-    }
-    PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
-    while(1)
-    {
-        if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     }
     PUT32(RESETS_RESET_CLR,(1<<22)); //UART0
     while(1)
