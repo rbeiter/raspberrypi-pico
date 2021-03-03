@@ -166,17 +166,10 @@ static void hexstring ( unsigned int d )
 
 static void uart_init ( void )
 {
-    unsigned int ra;
-
     PUT32(RESETS_RESET_CLR,(1<<5)); //IO_BANK0
     while(1)
     {
         if((GET32(RESETS_RESET_DONE_RW)&(1<<5))!=0) break;
-    }
-    PUT32(RESETS_RESET_CLR,(1<<8)); //PADS_BANK0
-    while(1)
-    {
-        if((GET32(RESETS_RESET_DONE_RW)&(1<<8))!=0) break;
     }
     PUT32(RESETS_RESET_CLR,(1<<22)); //UART0
     while(1)
@@ -195,18 +188,8 @@ static void uart_init ( void )
     //0111 0000
     PUT32(UART0_BASE_UARTLCR_H_RW,0x70);
     PUT32(UART0_BASE_UARTCR_RW,/*(1<<9)|*/(1<<8)|(1<<0));
-
-    ra=GET32(PADS_BANK0_GPIO0_RW);      //UART_TX
-    ra^=0x40; //if input disabled then enable
-    ra&=0xC0; //if output disabled then enable
-    PUT32(PADS_BANK0_GPIO0_XOR,ra);
-    PUT32(IO_BANK0_GPIO0_CTRL_RW,2);    //UART
-
-    //ra=GET32(PADS_BANK0_GPIO1_RW);        //UART_RX
-    //ra^=0x40; //if input disabled then enable
-    //ra&=0xC0; //if output disabled then enable
-    //PUT32(PADS_BANK0_GPIO1_XOR,ra);
-    //PUT32(IO_BANK0_GPIO1_CTRL_RW,2);  //UART
+    PUT32(IO_BANK0_GPIO0_CTRL_RW,2);    //UART TX
+    //PUT32(IO_BANK0_GPIO1_CTRL_RW,2);  //UART RX
 }
 
 static void clock_init ( void )
